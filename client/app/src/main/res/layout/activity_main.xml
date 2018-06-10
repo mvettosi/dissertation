@@ -179,14 +179,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button8" />
 
-    <Button
-        android:id="@+id/buttonEnter"
-        android:layout_width="115dp"
-        android:layout_height="78dp"
-        android:background="#0000"
-        android:text="✓"
-        android:textColor="@android:color/black"
-        android:textSize="30sp"
-        app:layout_constraintStart_toEndOf="@+id/button0"
-        app:layout_constraintTop_toBottomOf="@+id/button9" />
+    <!--<Button-->
+    <!--android:id="@+id/buttonEnter"-->
+    <!--android:layout_width="115dp"-->
+    <!--android:layout_height="78dp"-->
+    <!--android:background="#0000"-->
+    <!--android:text="✓"-->
+    <!--android:textColor="@android:color/black"-->
+    <!--android:textSize="30sp"-->
+    <!--app:layout_constraintStart_toEndOf="@+id/button0"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/button9" />-->
 </android.support.constraint.ConstraintLayout>

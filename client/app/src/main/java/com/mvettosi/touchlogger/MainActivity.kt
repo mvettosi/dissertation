@@ -1,5 +1,6 @@
 package com.mvettosi.touchlogger
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> {
-                alert("Settings")
+                startActivity(Intent(this, SettingsActivity::class.java))
                 return true
             }
         }
@@ -60,7 +61,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun startPinRecording() {
 //        pinStarted = Date(System.currentTimeMillis() - 1000)
-        alert("Started")
     }
 
     private fun completePinRecording(newPin: String) {
