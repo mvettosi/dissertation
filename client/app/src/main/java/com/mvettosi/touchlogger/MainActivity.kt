@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -23,6 +24,16 @@ class MainActivity : AppCompatActivity() {
         // Inflate the main_menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_settings -> {
+                alert("Settings")
+                return true
+            }
+        }
+        return false
     }
 
     private fun newPin() {

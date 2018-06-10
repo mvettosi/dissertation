@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:defaultValue="true"
+        android:key="settingAccelerometer"
+        android:summary="@string/setting_switch_desc"
+        android:title="@string/setting_accelerometer" />
+    <SwitchPreference
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:defaultValue="true"
+        android:key="settingGyroscope"
+        android:summary="@string/setting_switch_desc"
+        android:title="@string/setting_gyroscope" />
+    <SwitchPreference
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:defaultValue="true"
+        android:key="settingMagnetometer"
+        android:summary="@string/setting_switch_desc"
+        android:title="@string/setting_magnetometer" />
+    <SwitchPreference
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:defaultValue="true"
+        android:key="settingProximity"
+        android:summary="@string/setting_switch_desc"
+        android:title="@string/setting_proximity" />
+    <SwitchPreference
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:defaultValue="true"
+        android:key="settingBarometer"
+        android:summary="@string/setting_switch_desc"
+        android:title="@string/setting_barometer" />
+    <SwitchPreference
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:defaultValue="true"
+        android:key="settingAmbientLight"
+        android:summary="@string/setting_switch_desc"
+        android:title="@string/setting_ambient_light" />
+    <SwitchPreference
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:defaultValue="true"
+        android:key="settingRotationVector"
+        android:summary="@string/setting_switch_desc"
+        android:title="@string/setting_rotation_vector" />
+</PreferenceScreen>
