@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">TouchLogger</string>
+    <string name="action_settings">Settings</string>
+    <string name="setting_accelerometer">Use Accelerometer</string>
+    <string name="setting_gyroscope">Use Gyroscope</string>
+    <string name="setting_magnetometer">Use Magnetometer</string>
+    <string name="setting_proximity">Use Proximity</string>
+    <string name="setting_barometer">Use Barometer</string>
+    <string name="setting_ambient_light">Use Ambient Light</string>
+    <string name="setting_rotation_vector">Use Rotation Vector</string>
+    <string name="setting_switch_desc">Enable or disable data retrieval from this sensor</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
