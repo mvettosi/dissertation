@@ -1,8 +1,9 @@
-package com.mvettosi.touchlogger
+package com.mvettosi.touchlogger.training
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.preference.PreferenceFragmentCompat
+import com.mvettosi.touchlogger.R
 
 /**
  * A simple [Fragment] subclass.

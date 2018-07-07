@@ -1,0 +1,4 @@
+[TrainingActivity]-[SensorListener]
+[LoggerService]-[SensorListener]
+[SensorListener]-[SensorDataCache]
+[SensorDataCache]-[SensorDataProcessor]

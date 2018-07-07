@@ -1,4 +1,4 @@
-package com.mvettosi.touchlogger
+package com.mvettosi.touchlogger.training
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity

@@ -1,21 +1,38 @@
-package com.mvettosi.touchlogger
+package com.mvettosi.touchlogger.training
 
+import android.content.Context
 import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.mvettosi.touchlogger.R
+import com.mvettosi.touchlogger.listener.SensorDataListener
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+
+class TrainingActivity : AppCompatActivity() {
     lateinit var pinStarted: Date
+    private val sensorDataListener = SensorDataListener(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val sm = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val list = sm.getSensorList(Sensor.TYPE_ALL)
+
+        for (s in list) {
+            Log.d("SENSORS", "name: " + s.name)
+            Log.d("SENSORS", "type: " + s.type)
+            Log.d("SENSORS", "stringType: " + s.stringType)
+        }
 
         typePin.isEnabled = false
         newPin()
@@ -60,15 +77,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startPinRecording() {
-//        pinStarted = Date(System.currentTimeMillis() - 1000)
+        sensorDataListener.startRecording()
     }
 
     private fun completePinRecording(newPin: String) {
         alert("Right!")
+        sensorDataListener.stopRecording()
     }
 
     private fun alert(s: String) {
-        val alertDialog = AlertDialog.Builder(this@MainActivity).create()
+        val alertDialog = AlertDialog.Builder(this@TrainingActivity).create()
         alertDialog.setMessage(s)
         alertDialog.show()
     }
