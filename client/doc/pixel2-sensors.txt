@@ -1,0 +1,31 @@
+name: LSM6DSM Accelerometerb					stringType: android.sensor.accelerometer
+name: AK09915 Magnetometerb						stringType: android.sensor.magnetic_field
+name: AK09915 Magnetometer Uncalibratedb		stringType: android.sensor.magnetic_field_uncalibrated
+name: LSM6DSM Gyroscopeb						stringType: android.sensor.gyroscope
+name: LSM6DSM Gyroscope Uncalibratedb			stringType: android.sensor.gyroscope_uncalibrated
+name: TMx490x PROXb								stringType: android.sensor.proximity
+name: TMx490x ALSb								stringType: android.sensor.light
+name: BMP280 Pressureb							stringType: android.sensor.pressure
+name: Camera Sync 0 - Rearb						stringType: com.google.sensor.sync
+name: Camera Sync 1 - Front Secondaryb			stringType: com.google.sensor.sync
+name: Elmyra - Raw datab						stringType: com.google.sensor.elmyra.raw
+name: LSM6DSM Thermometerb						stringType: com.google.sensor.gyro_temperature
+name: LSM6DSM Accelerometer Uncalibratedb		stringType: android.sensor.accelerometer_uncalibrated
+name: Gravityb									stringType: android.sensor.gravity
+name: Linear Accelerationb						stringType: android.sensor.linear_acceleration
+name: Rotation Vectorb							stringType: android.sensor.rotation_vector
+name: Significant Motionb						stringType: android.sensor.significant_motion
+name: Game Rotation Vectorb						stringType: android.sensor.game_rotation_vector
+name: Geomagnetic Rotation Vectorb				stringType: android.sensor.geomagnetic_rotation_vector
+name: Orientationb								stringType: android.sensor.orientation
+name: Tiltb										stringType: android.sensor.tilt_detector
+name: Device Pickupb							stringType: android.sensor.pick_up_gesture
+name: Device Orienationb						stringType: android.sensor.device_orientation
+name: ElmyraSensorb								stringType: com.google.sensor.elmyra.sensor
+name: Binned Brightnessb						stringType: com.google.sensor.binned_brightness
+name: Double Twistb								stringType: com.google.sensor.double_twist
+name: Proximity Gated Double Tap Gestureb		stringType: com.google.sensor.double_touch
+name: ElmyraSensor -wakeup Secondaryb			stringType: com.google.sensor.elmyra.sensor
+name: LSM6DSM Step Detectorb					stringType: android.sensor.step_detector
+name: LSM6DSM Step Counterb						stringType: android.sensor.step_counter
+name: AK8789 Hall Effectb						stringType: com.google.sensor.hall_effect

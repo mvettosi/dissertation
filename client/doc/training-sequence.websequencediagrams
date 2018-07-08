@@ -1,0 +1,16 @@
+TrainingActivity->SensorListener: startRecording()
+SensorListener->SensorListener: registerToSensors()
+SensorListener->SensorDataCacheService: dataCollected()
+SensorListener->SensorDataCacheService: dataCollected()
+SensorListener->SensorDataCacheService: ...
+SensorListener->SensorDataCacheService: dataCollected()
+TrainingActivity->SensorListener: stopRecording()
+SensorListener->SensorListener: unregisterFromSensors()
+SensorListener->SensorDataCacheService: clearCache()
+SensorDataCacheService->SensorDataProcessorService: process(cachedData)
+SensorDataProcessorService->+SensorDataProcessorService:
+SensorDataProcessorService-->-SensorDataProcessorService: cutData(cachedData)
+SensorDataProcessorService->+SensorDataProcessorService:
+SensorDataProcessorService-->-SensorDataProcessorService: cleanData(cutData)
+SensorDataProcessorService->+SensorDataProcessorService:
+SensorDataProcessorService-->-SensorDataProcessorService: sendData(cleanedData)
