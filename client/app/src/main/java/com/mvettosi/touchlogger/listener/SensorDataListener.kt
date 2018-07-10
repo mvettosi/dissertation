@@ -5,6 +5,7 @@ import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
+import android.util.Log
 import com.mvettosi.touchlogger.cache.SensorDataCacheActions.ADD_TO_CACHE
 import com.mvettosi.touchlogger.cache.SensorDataCacheActions.CLEAR_CACHE
 import com.mvettosi.touchlogger.cache.SensorDataCacheFields.*
@@ -12,6 +13,7 @@ import com.mvettosi.touchlogger.cache.SensorDataCacheService
 
 class SensorDataListener(owner: Activity) : SensorEventListener {
     var ownerActivity: Activity = owner
+    var isRecording = false
 
     // SensorEventListener overrides
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
@@ -32,14 +34,23 @@ class SensorDataListener(owner: Activity) : SensorEventListener {
 
     // Public methods
     fun startRecording() {
+        Log.d("SensorDataListener", "Starting to record sensors")
+        isRecording = true
         //Fetch settings, register as listener for all the set sensors
     }
 
-    fun stopRecording() {
+    fun stopRecording(newPin: String?) {
+        Log.d("SensorDataListener", "Stopping to record sensors")
+        isRecording = false
         //Unresgister from all sensors, then ask cache to process and send data
 
         var intent = Intent(ownerActivity, SensorDataCacheService::class.java)
         intent.putExtra(MESSAGE_TYPE.name, CLEAR_CACHE)
         ownerActivity.startService(intent)
+    }
+
+    fun discardRecording() {
+        Log.d("SensorDataListener", "Discarded recordings")
+        isRecording = false
     }
 }
