@@ -22,7 +22,6 @@ class TrainingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         typePin.isEnabled = false
-        showNewPin()
 
 //        val sm = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 //        val list = sm.getSensorList(Sensor.TYPE_ALL)
@@ -53,6 +52,9 @@ class TrainingActivity : AppCompatActivity() {
                 true
             }
             R.id.action_newpin -> {
+                if (sensorDataListener.isRecording) {
+                    sensorDataListener.discardRecording()
+                }
                 showNewPin()
                 sensorDataListener.startRecording()
                 true
