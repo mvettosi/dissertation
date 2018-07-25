@@ -3,6 +3,7 @@ package com.mvettosi.touchlogger.training
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,14 +15,15 @@ import java.util.*
 
 
 class TrainingActivity : AppCompatActivity() {
-    private val sensorDataListener = SensorDataListener(this)
+    private lateinit var sensorDataListener: SensorDataListener
 
     // AppCompactActivity Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         typePin.isEnabled = false
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+        sensorDataListener = SensorDataListener(this)
 
 //        val sm = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 //        val list = sm.getSensorList(Sensor.TYPE_ALL)

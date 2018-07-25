@@ -2,11 +2,15 @@ package com.mvettosi.touchlogger.cache
 
 import android.app.IntentService
 import android.content.Intent
-import android.os.Bundle
+import android.util.Log
 import com.mvettosi.touchlogger.cache.SensorDataCacheActions.ADD_TO_CACHE
 import com.mvettosi.touchlogger.cache.SensorDataCacheActions.CLEAR_CACHE
 import com.mvettosi.touchlogger.cache.SensorDataCacheFields.MESSAGE_TYPE
+import com.mvettosi.touchlogger.cache.SensorDataCacheFields.SENSOR_EVENT_SENSOR_TYPE
+import com.mvettosi.touchlogger.cache.SensorDataCacheFields.SENSOR_EVENT_TIMESTAMP
+import com.mvettosi.touchlogger.cache.SensorDataCacheFields.SENSOR_EVENT_VALUES
 import com.mvettosi.touchlogger.processor.SensorDataProcessor
+import java.util.*
 
 
 /**
@@ -17,7 +21,7 @@ class SensorDataCacheService : IntentService("SensorDataCacheService") {
     override fun onHandleIntent(intent: Intent?) {
         when (intent?.extras?.get(MESSAGE_TYPE.name)) {
             ADD_TO_CACHE -> {
-                cache(intent?.extras)
+                cache(intent)
             }
             CLEAR_CACHE -> {
                 clearCache()
@@ -25,8 +29,13 @@ class SensorDataCacheService : IntentService("SensorDataCacheService") {
         }
     }
 
-    private fun cache(extras: Bundle?) {
-
+    private fun cache(intent: Intent?) {
+        if (intent != null) {
+            var sensorName = intent.getStringExtra(SENSOR_EVENT_SENSOR_TYPE.name)
+            var timestamp = intent.getLongExtra(SENSOR_EVENT_TIMESTAMP.name, 0)
+            var values = intent.getFloatArrayExtra(SENSOR_EVENT_VALUES.name)
+            Log.d("CACHE", "Got sensor: " + sensorName + ", at: " + timestamp + ", values: " + Arrays.toString(values))
+        }
     }
 
     private fun clearCache() {
