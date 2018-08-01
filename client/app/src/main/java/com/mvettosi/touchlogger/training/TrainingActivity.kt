@@ -1,6 +1,7 @@
 package com.mvettosi.touchlogger.training
 
 import android.content.Intent
+import android.hardware.Sensor
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager
@@ -10,12 +11,24 @@ import android.view.View
 import android.widget.Toast
 import com.mvettosi.touchlogger.R
 import com.mvettosi.touchlogger.listener.SensorDataListener
+import com.mvettosi.touchlogger.model.FeatureProfile
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 
 class TrainingActivity : AppCompatActivity() {
     private lateinit var sensorDataListener: SensorDataListener
+
+    var features = listOf(
+            FeatureProfile(Sensor.TYPE_ACCELEROMETER, R.string.accelerometer),
+            FeatureProfile(Sensor.TYPE_GYROSCOPE, R.string.gyroscope),
+            FeatureProfile(Sensor.TYPE_MAGNETIC_FIELD, R.string.magnetometer),
+            FeatureProfile(Sensor.TYPE_PROXIMITY, R.string.proximity),
+            FeatureProfile(Sensor.TYPE_PRESSURE, R.string.barometer),
+            FeatureProfile(Sensor.TYPE_LIGHT, R.string.ambient_light),
+            FeatureProfile(Sensor.TYPE_ROTATION_VECTOR, R.string.rotation_vector),
+            FeatureProfile(R.string.tap_timestamp)
+    )
 
     // AppCompactActivity Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,14 +37,6 @@ class TrainingActivity : AppCompatActivity() {
         typePin.isEnabled = false
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         sensorDataListener = SensorDataListener(this)
-
-//        val sm = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-//        val list = sm.getSensorList(Sensor.TYPE_ALL)
-//        for (s in list) {
-//            Log.d("SENSORS", "name: " + s.name)
-//            Log.d("SENSORS", "type: " + s.type)
-//            Log.d("SENSORS", "stringType: " + s.stringType)
-//        }
     }
 
     override fun onPause() {
@@ -73,6 +78,7 @@ class TrainingActivity : AppCompatActivity() {
     fun addDigit(view: View) {
         if (sensorDataListener.isRecording) {
             val digit = view.tag.toString()
+            sensorDataListener.addFeatureValue(this.getString(R.string.tap_timestamp), System.currentTimeMillis()) //TODO seconds or millis?
             val currentText = typePin.text.toString()
             val newText = currentText + digit
             typePin.setText(newText)
@@ -89,6 +95,6 @@ class TrainingActivity : AppCompatActivity() {
     }
 
     fun toast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 }

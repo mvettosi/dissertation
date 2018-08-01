@@ -13,4 +13,16 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--Sensors-->
+    <string name="accelerometer">accelerometer</string>
+    <string name="gyroscope">gyroscope</string>
+    <string name="magnetometer">magnetometer</string>
+    <string name="proximity">proximity</string>
+    <string name="barometer">barometer</string>
+    <string name="ambient_light">ambient_light</string>
+    <string name="rotation_vector">rotation_vector</string>
+
+    <!--Other features-->
+    <string name="tap_timestamp">tap_timestamp</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.mvettosi.touchlogger.listener
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -18,28 +17,13 @@ import com.mvettosi.touchlogger.cache.SensorDataCacheFields.SENSOR_EVENT_SENSOR_
 import com.mvettosi.touchlogger.cache.SensorDataCacheFields.SENSOR_EVENT_TIMESTAMP
 import com.mvettosi.touchlogger.cache.SensorDataCacheFields.SENSOR_EVENT_VALUES
 import com.mvettosi.touchlogger.cache.SensorDataCacheService
-import com.mvettosi.touchlogger.training.SettingsActivity.Companion.ACCELLEROMETER
-import com.mvettosi.touchlogger.training.SettingsActivity.Companion.AMBIENT_LIGHT
-import com.mvettosi.touchlogger.training.SettingsActivity.Companion.BAROMETER
-import com.mvettosi.touchlogger.training.SettingsActivity.Companion.GYROSCOPE
-import com.mvettosi.touchlogger.training.SettingsActivity.Companion.MAGNETOMETER
-import com.mvettosi.touchlogger.training.SettingsActivity.Companion.PROXIMITY
-import com.mvettosi.touchlogger.training.SettingsActivity.Companion.ROTATION_VECTOR
+import com.mvettosi.touchlogger.training.TrainingActivity
 
-class SensorDataListener(owner: Activity) : SensorEventListener {
-    private var ownerActivity: Activity = owner
+class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
+    private var ownerActivity: TrainingActivity = owner
     private var settings = PreferenceManager.getDefaultSharedPreferences(ownerActivity) as SharedPreferences
     private var sensorManager = ownerActivity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     var isRecording = false
-
-    // Sensors
-    private var accellerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-    private var gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-    private var magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-    private var proximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-    private var barometer = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
-    private var light = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
-    private var rotationVector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
 
     // SensorEventListener overrides
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
@@ -62,27 +46,13 @@ class SensorDataListener(owner: Activity) : SensorEventListener {
     fun startRecording() {
         Log.d("SensorDataListener", "Starting to record sensors")
         var delay = SensorManager.SENSOR_DELAY_GAME
-        if (settings.getBoolean(ACCELLEROMETER, true)) {
-            sensorManager.registerListener(this, accellerometer, delay)
+
+        for (sensor in ownerActivity.features) {
+            if (settings.getBoolean(sensor.getName(ownerActivity), false)) {
+                sensorManager.registerListener(this, sensor.getSensor(ownerActivity), delay)
+            }
         }
-        if (settings.getBoolean(GYROSCOPE, true)) {
-            sensorManager.registerListener(this, gyroscope, delay)
-        }
-        if (settings.getBoolean(MAGNETOMETER, true)) {
-            sensorManager.registerListener(this, magnetometer, delay)
-        }
-        if (settings.getBoolean(PROXIMITY, true)) {
-            sensorManager.registerListener(this, proximity, delay)
-        }
-        if (settings.getBoolean(BAROMETER, true)) {
-            sensorManager.registerListener(this, barometer, delay)
-        }
-        if (settings.getBoolean(AMBIENT_LIGHT, true)) {
-            sensorManager.registerListener(this, light, delay)
-        }
-        if (settings.getBoolean(ROTATION_VECTOR, true)) {
-            sensorManager.registerListener(this, rotationVector, delay)
-        }
+
         isRecording = true
     }
 
@@ -99,5 +69,14 @@ class SensorDataListener(owner: Activity) : SensorEventListener {
         Log.d("SensorDataListener", "Discarded recordings")
         sensorManager.unregisterListener(this)
         isRecording = false
+    }
+
+    fun addFeatureValue(feature: String, timestamp: Long) {
+        var intent = Intent(ownerActivity, SensorDataCacheService::class.java)
+        intent.putExtra(SENSOR_EVENT_SENSOR_TYPE.name, feature)
+        intent.putExtra(SENSOR_EVENT_TIMESTAMP.name, timestamp)
+//        intent.putExtra(SENSOR_EVENT_VALUES.name, values)
+        intent.putExtra(MESSAGE_TYPE.name, ADD_TO_CACHE)
+        ownerActivity.startService(intent)
     }
 }
