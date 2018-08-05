@@ -27,7 +27,7 @@ class TrainingActivity : AppCompatActivity() {
             FeatureProfile(Sensor.TYPE_PRESSURE, R.string.barometer),
             FeatureProfile(Sensor.TYPE_LIGHT, R.string.ambient_light),
             FeatureProfile(Sensor.TYPE_ROTATION_VECTOR, R.string.rotation_vector),
-            FeatureProfile(R.string.tap_timestamp)
+            FeatureProfile(R.string.digit)
     )
 
     // AppCompactActivity Overrides
@@ -78,7 +78,8 @@ class TrainingActivity : AppCompatActivity() {
     fun addDigit(view: View) {
         if (sensorDataListener.isRecording) {
             val digit = view.tag.toString()
-            sensorDataListener.addFeatureValue(this.getString(R.string.tap_timestamp), System.currentTimeMillis()) //TODO seconds or millis?
+            val now = System.currentTimeMillis()
+            sensorDataListener.addFeatureValue(this.getString(R.string.digit), now, floatArrayOf(digit.toFloat())) //TODO seconds or millis?
             val currentText = typePin.text.toString()
             val newText = currentText + digit
             typePin.setText(newText)

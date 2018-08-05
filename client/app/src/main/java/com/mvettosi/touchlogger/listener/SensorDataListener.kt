@@ -25,6 +25,10 @@ class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
     private var sensorManager = ownerActivity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     var isRecording = false
 
+    companion object {
+        private val TAG = "SensorDataListener"
+    }
+
     // SensorEventListener overrides
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // No need for this at the moment
@@ -44,7 +48,7 @@ class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
 
     // Public methods
     fun startRecording() {
-        Log.d("SensorDataListener", "Starting to record sensors")
+        Log.d(TAG, "Starting to record sensors")
         var delay = SensorManager.SENSOR_DELAY_GAME
 
         for (sensor in ownerActivity.features) {
@@ -57,7 +61,7 @@ class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
     }
 
     fun stopRecording(newPin: String?) {
-        Log.d("SensorDataListener", "Stopping to record sensors")
+        Log.d(TAG, "Stopping to record sensors")
         sensorManager.unregisterListener(this)
         var intent = Intent(ownerActivity, SensorDataCacheService::class.java)
         intent.putExtra(MESSAGE_TYPE.name, CLEAR_CACHE)
@@ -66,16 +70,18 @@ class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
     }
 
     fun discardRecording() {
-        Log.d("SensorDataListener", "Discarded recordings")
+        Log.d(TAG, "Discarded recordings")
         sensorManager.unregisterListener(this)
         isRecording = false
     }
 
-    fun addFeatureValue(feature: String, timestamp: Long) {
+    fun addFeatureValue(feature: String, timestamp: Long, values: FloatArray?) {
         var intent = Intent(ownerActivity, SensorDataCacheService::class.java)
         intent.putExtra(SENSOR_EVENT_SENSOR_TYPE.name, feature)
         intent.putExtra(SENSOR_EVENT_TIMESTAMP.name, timestamp)
-//        intent.putExtra(SENSOR_EVENT_VALUES.name, values)
+        if (values != null) {
+            intent.putExtra(SENSOR_EVENT_VALUES.name, values)
+        }
         intent.putExtra(MESSAGE_TYPE.name, ADD_TO_CACHE)
         ownerActivity.startService(intent)
     }
