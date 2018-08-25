@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.mvettosi.touchlogger.R
+import com.mvettosi.touchlogger.cache.DistributionCache
 import com.mvettosi.touchlogger.listener.SensorDataListener
 import com.mvettosi.touchlogger.model.FeatureProfile
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,6 +19,7 @@ import java.util.*
 
 class TrainingActivity : AppCompatActivity() {
     private lateinit var sensorDataListener: SensorDataListener
+    private lateinit var pinGenerator: DistributionCache
 
     var features = listOf(
             FeatureProfile(Sensor.TYPE_ACCELEROMETER, R.string.accelerometer),
@@ -37,6 +39,7 @@ class TrainingActivity : AppCompatActivity() {
         typePin.isEnabled = false
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         sensorDataListener = SensorDataListener(this)
+        pinGenerator = DistributionCache(this)
     }
 
     override fun onPause() {
@@ -79,7 +82,7 @@ class TrainingActivity : AppCompatActivity() {
         if (sensorDataListener.isRecording) {
             val digit = view.tag.toString()
             val now = System.currentTimeMillis()
-            sensorDataListener.addFeatureValue(this.getString(R.string.digit), now, floatArrayOf(digit.toFloat())) //TODO seconds or millis?
+            sensorDataListener.addFeatureValue(this.getString(R.string.digit), now, floatArrayOf(digit.toFloat()))
             val currentText = typePin.text.toString()
             val newText = currentText + digit
             typePin.setText(newText)
