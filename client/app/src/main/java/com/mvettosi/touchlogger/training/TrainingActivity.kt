@@ -89,6 +89,7 @@ class TrainingActivity : AppCompatActivity() {
                 if (newText == samplePin.text) {
                     sensorDataListener.stopRecording()
                     pinGenerator.addPin(samplePin.text.toString())
+                    collected.text = (collected.text.toString().toInt() + 1).toString()
                     toast("Collected!")
                 } else {
                     sensorDataListener.discardRecording()
@@ -100,5 +101,9 @@ class TrainingActivity : AppCompatActivity() {
 
     fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+    }
+
+    fun setCollected(quantity: Int) {
+        collected.text = quantity.toString()
     }
 }
