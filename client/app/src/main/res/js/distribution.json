@@ -1,0 +1,11 @@
+{
+  "_id": "_design/views",
+  "_rev": "18-817757210b1f86222c330628f2cb78ee",
+  "views": {
+    "distribution": {
+      "map": "function (doc) {\n  if (doc.digit) {\n    doc.digit.forEach(function(digit, index) {\n      emit([index, digit.values[0]], 1);\n    });\n  }\n}",
+      "reduce": "function (keys, values, rereduce) {\n  if (rereduce) {\n    return sum(values);\n  } else {\n    return values.length;\n  }\n}"
+    }
+  },
+  "language": "javascript"
+}

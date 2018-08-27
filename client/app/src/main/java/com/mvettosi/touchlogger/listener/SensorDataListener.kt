@@ -60,7 +60,7 @@ class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
         isRecording = true
     }
 
-    fun stopRecording(newPin: String?) {
+    fun stopRecording() {
         Log.d(TAG, "Stopping to record sensors")
         sensorManager.unregisterListener(this)
         var intent = Intent(ownerActivity, SensorDataCacheService::class.java)

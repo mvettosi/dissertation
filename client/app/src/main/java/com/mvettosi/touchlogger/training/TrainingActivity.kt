@@ -14,7 +14,6 @@ import com.mvettosi.touchlogger.cache.DistributionCache
 import com.mvettosi.touchlogger.listener.SensorDataListener
 import com.mvettosi.touchlogger.model.FeatureProfile
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 
 class TrainingActivity : AppCompatActivity() {
@@ -39,7 +38,7 @@ class TrainingActivity : AppCompatActivity() {
         typePin.isEnabled = false
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         sensorDataListener = SensorDataListener(this)
-        pinGenerator = DistributionCache(this)
+        pinGenerator = DistributionCache(this, 4)
     }
 
     override fun onPause() {
@@ -75,7 +74,7 @@ class TrainingActivity : AppCompatActivity() {
 
     private fun showNewPin() {
         typePin.setText("")
-        samplePin.text = Random().nextInt(10000).toString().padStart(4, '0')
+        samplePin.text = pinGenerator.getPin()
     }
 
     fun addDigit(view: View) {
@@ -88,7 +87,8 @@ class TrainingActivity : AppCompatActivity() {
             typePin.setText(newText)
             if (newText.length == samplePin.text.length) {
                 if (newText == samplePin.text) {
-                    sensorDataListener.stopRecording(samplePin.text.toString())
+                    sensorDataListener.stopRecording()
+                    pinGenerator.addPin(samplePin.text.toString())
                     toast("Collected!")
                 } else {
                     sensorDataListener.discardRecording()

@@ -55,6 +55,19 @@ class CouchdbClient(context: Context) {
         queue.add(stringRequest)
     }
 
+    fun getDbInfo(success: Response.Listener<JSONObject>) {
+        val stringRequest = JsonObjectRequest(
+                Request.Method.GET,
+                getDbUrl(),
+                null,
+                success,
+                Response.ErrorListener { error -> Log.d(TAG, error.toString()) }
+        )
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest)
+    }
+
 //    fun getView(name: String, vararg params: Pair<String, String>): JSONObject {
 //        var future = RequestFuture.newFuture<JSONObject>()
 //        val request = object : JsonObjectRequest(
