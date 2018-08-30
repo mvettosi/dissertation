@@ -20,9 +20,9 @@ import com.mvettosi.touchlogger.cache.SensorDataCacheService
 import com.mvettosi.touchlogger.training.TrainingActivity
 
 class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
-    private var ownerActivity: TrainingActivity = owner
-    private var settings = PreferenceManager.getDefaultSharedPreferences(ownerActivity) as SharedPreferences
-    private var sensorManager = ownerActivity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    private var context: TrainingActivity = owner
+    private var settings = PreferenceManager.getDefaultSharedPreferences(context) as SharedPreferences
+    private var sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     var isRecording = false
 
     companion object {
@@ -36,13 +36,13 @@ class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event != null) {
-            var intent = Intent(ownerActivity, SensorDataCacheService::class.java)
+            var intent = Intent(context, SensorDataCacheService::class.java)
             intent.putExtra(SENSOR_EVENT_ACCURACY.name, event.accuracy)
             intent.putExtra(SENSOR_EVENT_SENSOR_TYPE.name, event.sensor.stringType)
             intent.putExtra(SENSOR_EVENT_TIMESTAMP.name, event.timestamp)
             intent.putExtra(SENSOR_EVENT_VALUES.name, event.values)
             intent.putExtra(MESSAGE_TYPE.name, ADD_TO_CACHE)
-            ownerActivity.startService(intent)
+            context.startService(intent)
         }
     }
 
@@ -51,9 +51,9 @@ class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
         Log.d(TAG, "Starting to record sensors")
         var delay = SensorManager.SENSOR_DELAY_GAME
 
-        for (sensor in ownerActivity.features) {
-            if (settings.getBoolean(sensor.getName(ownerActivity), false)) {
-                sensorManager.registerListener(this, sensor.getSensor(ownerActivity), delay)
+        for (sensor in context.features) {
+            if (settings.getBoolean(sensor.getName(context), false)) {
+                sensorManager.registerListener(this, sensor.getSensor(context), delay)
             }
         }
 
@@ -63,9 +63,9 @@ class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
     fun stopRecording() {
         Log.d(TAG, "Stopping to record sensors")
         sensorManager.unregisterListener(this)
-        var intent = Intent(ownerActivity, SensorDataCacheService::class.java)
+        var intent = Intent(context, SensorDataCacheService::class.java)
         intent.putExtra(MESSAGE_TYPE.name, CLEAR_CACHE)
-        ownerActivity.startService(intent)
+        context.startService(intent)
         isRecording = false
     }
 
@@ -76,13 +76,13 @@ class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
     }
 
     fun addFeatureValue(feature: String, timestamp: Long, values: FloatArray?) {
-        var intent = Intent(ownerActivity, SensorDataCacheService::class.java)
+        var intent = Intent(context, SensorDataCacheService::class.java)
         intent.putExtra(SENSOR_EVENT_SENSOR_TYPE.name, feature)
         intent.putExtra(SENSOR_EVENT_TIMESTAMP.name, timestamp)
         if (values != null) {
             intent.putExtra(SENSOR_EVENT_VALUES.name, values)
         }
         intent.putExtra(MESSAGE_TYPE.name, ADD_TO_CACHE)
-        ownerActivity.startService(intent)
+        context.startService(intent)
     }
 }

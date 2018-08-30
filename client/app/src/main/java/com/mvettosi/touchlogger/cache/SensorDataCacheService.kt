@@ -22,7 +22,7 @@ class SensorDataCacheService : IntentService("SensorDataCacheService") {
     private lateinit var db: CouchdbClient
 
     companion object {
-        private val TAG = "SensorDataCacheService"
+        private const val TAG = "SensorDataCacheService"
         private var cache = mutableMapOf<String, MutableList<FeatureData>>()
     }
 
@@ -32,6 +32,7 @@ class SensorDataCacheService : IntentService("SensorDataCacheService") {
     }
 
     override fun onHandleIntent(intent: Intent?) {
+        Log.d(TAG, "${Thread.currentThread().name} onHandleIntent")
         when (intent?.extras?.get(MESSAGE_TYPE.name)) {
             ADD_TO_CACHE -> {
                 cache(intent)
@@ -44,14 +45,15 @@ class SensorDataCacheService : IntentService("SensorDataCacheService") {
 
     private fun cache(intent: Intent?) {
         if (intent != null) {
+            // Retrieve Data
             var sensorName = intent.getStringExtra(SENSOR_EVENT_SENSOR_TYPE.name)
             var timestamp = intent.getLongExtra(SENSOR_EVENT_TIMESTAMP.name, 0)
             var values = intent.getFloatArrayExtra(SENSOR_EVENT_VALUES.name)
             var accuracy = intent.getIntExtra(SensorDataCacheFields.SENSOR_EVENT_ACCURACY.name, 0)
-            if (!cache.containsKey(sensorName)) {
-                cache[sensorName] = mutableListOf()
-            }
-            cache[sensorName]?.add(FeatureData(timestamp, values, accuracy))
+
+            // Add to cache
+            var featureList = cache.getOrPut(sensorName) { mutableListOf() }
+            featureList.add(FeatureData(timestamp, values, accuracy))
             Log.v(TAG, "Got sensor: " + sensorName + ", at: " + timestamp + ", values: " + Arrays.toString(values))
         }
     }
