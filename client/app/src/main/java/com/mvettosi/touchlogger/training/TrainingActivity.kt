@@ -20,16 +20,16 @@ class TrainingActivity : AppCompatActivity() {
     private lateinit var sensorDataListener: SensorDataListener
     private lateinit var pinGenerator: DistributionCache
 
-    var features = listOf(
-            FeatureProfile(Sensor.TYPE_ACCELEROMETER, R.string.accelerometer),
-            FeatureProfile(Sensor.TYPE_GYROSCOPE, R.string.gyroscope),
-            FeatureProfile(Sensor.TYPE_MAGNETIC_FIELD, R.string.magnetometer),
-            FeatureProfile(Sensor.TYPE_PROXIMITY, R.string.proximity),
-            FeatureProfile(Sensor.TYPE_PRESSURE, R.string.barometer),
-            FeatureProfile(Sensor.TYPE_LIGHT, R.string.ambient_light),
-            FeatureProfile(Sensor.TYPE_ROTATION_VECTOR, R.string.rotation_vector),
-            FeatureProfile(R.string.digit)
-    )
+var features = listOf(
+        FeatureProfile(Sensor.TYPE_ACCELEROMETER, R.string.accelerometer),
+        FeatureProfile(Sensor.TYPE_GYROSCOPE, R.string.gyroscope),
+        FeatureProfile(Sensor.TYPE_MAGNETIC_FIELD, R.string.magnetometer),
+        FeatureProfile(Sensor.TYPE_PROXIMITY, R.string.proximity),
+        FeatureProfile(Sensor.TYPE_PRESSURE, R.string.barometer),
+        FeatureProfile(Sensor.TYPE_LIGHT, R.string.ambient_light),
+        FeatureProfile(Sensor.TYPE_ROTATION_VECTOR, R.string.rotation_vector),
+        FeatureProfile(R.string.digit)
+)
 
     // AppCompactActivity Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,7 @@ class TrainingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         typePin.isEnabled = false
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-        sensorDataListener = SensorDataListener(this)
+        sensorDataListener = SensorDataListener(this, features)
         pinGenerator = DistributionCache(this, 4)
     }
 
@@ -77,27 +77,37 @@ class TrainingActivity : AppCompatActivity() {
         samplePin.text = pinGenerator.getPin()
     }
 
-    fun addDigit(view: View) {
-        if (sensorDataListener.isRecording) {
-            val digit = view.tag.toString()
-            val now = System.currentTimeMillis()
-            sensorDataListener.addFeatureValue(this.getString(R.string.digit), now, floatArrayOf(digit.toFloat()))
-            val currentText = typePin.text.toString()
-            val newText = currentText + digit
-            typePin.setText(newText)
-            if (newText.length == samplePin.text.length) {
-                if (newText == samplePin.text) {
-                    sensorDataListener.stopRecording()
-                    pinGenerator.addPin(samplePin.text.toString())
-                    collected.text = (collected.text.toString().toInt() + 1).toString()
-                    toast("Collected!")
-                } else {
-                    sensorDataListener.discardRecording()
-                    toast("Discarded!")
-                }
+fun addDigit(view: View) {
+    if (sensorDataListener.isRecording) {
+        // Add digit and timestamp to cache
+        val digit = view.tag.toString()
+        val now = System.currentTimeMillis()
+        sensorDataListener.addFeatureValue(
+                this.getString(R.string.digit),
+                now,
+                floatArrayOf(digit.toFloat()))
+
+        // Update display
+        val currentText = typePin.text.toString()
+        val newText = currentText + digit
+        typePin.setText(newText)
+
+        // Check if pin is complete
+        if (newText.length == samplePin.text.length) {
+            if (newText == samplePin.text) {
+                // Pin correct
+                sensorDataListener.stopRecording()
+                pinGenerator.addPin(samplePin.text.toString())
+                collected.text = (collected.text.toString().toInt() + 1).toString()
+                toast("Collected!")
+            } else {
+                // Pin incorrect
+                sensorDataListener.discardRecording()
+                toast("Discarded!")
             }
         }
     }
+}
 
     fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()

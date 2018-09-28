@@ -60,21 +60,21 @@ class DistributionCache(context: Context, size: Int) {
         Log.v(TAG, "Distribution map: ${mapper.writeValueAsString(cache)}")
     }
 
-    fun getPin(): String {
-        var result = ""
-        if (dbSize < DB_SIZE_THREASHOLD || dbSize % 2 != 0) {
-            Log.d(TAG, "Generating random pin")
-            result = Random().nextInt(10000).toString().padStart(pinSize, '0')
-        } else {
-            Log.d(TAG, "Generating best pin")
-            for (i in 0 until pinSize) {
-                var occurrences = cache.getOrPut(i) { mutableMapOf() }
-                var min = occurrences[-1]
-                result += min ?: Random().nextInt(10).toString()
-            }
+fun getPin(): String {
+    var result = ""
+    if (dbSize < DB_SIZE_THREASHOLD || dbSize % 2 != 0) {
+        Log.d(TAG, "Generating random pin")
+        result = Random().nextInt(10000).toString().padStart(pinSize, '0')
+    } else {
+        Log.d(TAG, "Generating best pin")
+        for (i in 0 until pinSize) {
+            var occurrences = cache.getOrPut(i) { mutableMapOf() }
+            var min = occurrences[-1]
+            result += min ?: Random().nextInt(10).toString()
         }
-        return result
     }
+    return result
+}
 
     // Private Methods
     private fun retrieveInitData(context: Context) {

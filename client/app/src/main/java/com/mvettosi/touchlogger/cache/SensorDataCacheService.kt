@@ -5,6 +5,7 @@ import android.content.Intent
 import android.util.Log
 import com.mvettosi.touchlogger.cache.SensorDataCacheActions.ADD_TO_CACHE
 import com.mvettosi.touchlogger.cache.SensorDataCacheActions.CLEAR_CACHE
+import com.mvettosi.touchlogger.cache.SensorDataCacheActions.PURGE_CACHE
 import com.mvettosi.touchlogger.cache.SensorDataCacheFields.MESSAGE_TYPE
 import com.mvettosi.touchlogger.cache.SensorDataCacheFields.SENSOR_EVENT_SENSOR_TYPE
 import com.mvettosi.touchlogger.cache.SensorDataCacheFields.SENSOR_EVENT_TIMESTAMP
@@ -31,17 +32,20 @@ class SensorDataCacheService : IntentService("SensorDataCacheService") {
         db = CouchdbClient(this)
     }
 
-    override fun onHandleIntent(intent: Intent?) {
-        Log.d(TAG, "${Thread.currentThread().name} onHandleIntent")
-        when (intent?.extras?.get(MESSAGE_TYPE.name)) {
-            ADD_TO_CACHE -> {
-                cache(intent)
-            }
-            CLEAR_CACHE -> {
-                clearCache()
-            }
+override fun onHandleIntent(intent: Intent?) {
+    Log.d(TAG, "${Thread.currentThread().name} onHandleIntent")
+    when (intent?.extras?.get(MESSAGE_TYPE.name)) {
+        ADD_TO_CACHE -> {
+            cache(intent)
+        }
+        CLEAR_CACHE -> {
+            clearCache()
+        }
+        PURGE_CACHE -> {
+            cache = mutableMapOf()
         }
     }
+}
 
     private fun cache(intent: Intent?) {
         if (intent != null) {

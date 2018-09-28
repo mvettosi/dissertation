@@ -11,16 +11,19 @@ import android.support.v7.preference.PreferenceManager
 import android.util.Log
 import com.mvettosi.touchlogger.cache.SensorDataCacheActions.ADD_TO_CACHE
 import com.mvettosi.touchlogger.cache.SensorDataCacheActions.CLEAR_CACHE
+import com.mvettosi.touchlogger.cache.SensorDataCacheActions.PURGE_CACHE
 import com.mvettosi.touchlogger.cache.SensorDataCacheFields.MESSAGE_TYPE
 import com.mvettosi.touchlogger.cache.SensorDataCacheFields.SENSOR_EVENT_ACCURACY
 import com.mvettosi.touchlogger.cache.SensorDataCacheFields.SENSOR_EVENT_SENSOR_TYPE
 import com.mvettosi.touchlogger.cache.SensorDataCacheFields.SENSOR_EVENT_TIMESTAMP
 import com.mvettosi.touchlogger.cache.SensorDataCacheFields.SENSOR_EVENT_VALUES
 import com.mvettosi.touchlogger.cache.SensorDataCacheService
+import com.mvettosi.touchlogger.model.FeatureProfile
 import com.mvettosi.touchlogger.training.TrainingActivity
 
-class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
-    private var context: TrainingActivity = owner
+class SensorDataListener(owner: Context, features: List<FeatureProfile>) : SensorEventListener {
+    private var context: Context = owner
+    private var features = features
     private var settings = PreferenceManager.getDefaultSharedPreferences(context) as SharedPreferences
     private var sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     var isRecording = false
@@ -34,31 +37,31 @@ class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
         // No need for this at the moment
     }
 
-    override fun onSensorChanged(event: SensorEvent?) {
-        if (event != null) {
-            var intent = Intent(context, SensorDataCacheService::class.java)
-            intent.putExtra(SENSOR_EVENT_ACCURACY.name, event.accuracy)
-            intent.putExtra(SENSOR_EVENT_SENSOR_TYPE.name, event.sensor.stringType)
-            intent.putExtra(SENSOR_EVENT_TIMESTAMP.name, event.timestamp)
-            intent.putExtra(SENSOR_EVENT_VALUES.name, event.values)
-            intent.putExtra(MESSAGE_TYPE.name, ADD_TO_CACHE)
-            context.startService(intent)
-        }
+override fun onSensorChanged(event: SensorEvent?) {
+    if (event != null) {
+        var intent = Intent(context, SensorDataCacheService::class.java)
+        intent.putExtra(SENSOR_EVENT_ACCURACY.name, event.accuracy)
+        intent.putExtra(SENSOR_EVENT_SENSOR_TYPE.name, event.sensor.stringType)
+        intent.putExtra(SENSOR_EVENT_TIMESTAMP.name, event.timestamp)
+        intent.putExtra(SENSOR_EVENT_VALUES.name, event.values)
+        intent.putExtra(MESSAGE_TYPE.name, ADD_TO_CACHE)
+        context.startService(intent)
     }
+}
 
     // Public methods
-    fun startRecording() {
-        Log.d(TAG, "Starting to record sensors")
-        var delay = SensorManager.SENSOR_DELAY_GAME
+fun startRecording() {
+    Log.d(TAG, "Starting to record sensors")
+    var delay = SensorManager.SENSOR_DELAY_GAME
 
-        for (sensor in context.features) {
-            if (settings.getBoolean(sensor.getName(context), false)) {
-                sensorManager.registerListener(this, sensor.getSensor(context), delay)
-            }
+    for (sensor in features) {
+        if (settings.getBoolean(sensor.getName(context), false)) {
+            sensorManager.registerListener(this, sensor.getSensor(context), delay)
         }
-
-        isRecording = true
     }
+
+    isRecording = true
+}
 
     fun stopRecording() {
         Log.d(TAG, "Stopping to record sensors")
@@ -70,19 +73,22 @@ class SensorDataListener(owner: TrainingActivity) : SensorEventListener {
     }
 
     fun discardRecording() {
-        Log.d(TAG, "Discarded recordings")
+        Log.d(TAG, "Discarding recordings")
         sensorManager.unregisterListener(this)
+        var intent = Intent(context, SensorDataCacheService::class.java)
+        intent.putExtra(MESSAGE_TYPE.name, PURGE_CACHE)
+        context.startService(intent)
         isRecording = false
     }
 
-    fun addFeatureValue(feature: String, timestamp: Long, values: FloatArray?) {
-        var intent = Intent(context, SensorDataCacheService::class.java)
-        intent.putExtra(SENSOR_EVENT_SENSOR_TYPE.name, feature)
-        intent.putExtra(SENSOR_EVENT_TIMESTAMP.name, timestamp)
-        if (values != null) {
-            intent.putExtra(SENSOR_EVENT_VALUES.name, values)
-        }
-        intent.putExtra(MESSAGE_TYPE.name, ADD_TO_CACHE)
-        context.startService(intent)
+fun addFeatureValue(feature: String, timestamp: Long, values: FloatArray?) {
+    var intent = Intent(context, SensorDataCacheService::class.java)
+    intent.putExtra(SENSOR_EVENT_SENSOR_TYPE.name, feature)
+    intent.putExtra(SENSOR_EVENT_TIMESTAMP.name, timestamp)
+    if (values != null) {
+        intent.putExtra(SENSOR_EVENT_VALUES.name, values)
     }
+    intent.putExtra(MESSAGE_TYPE.name, ADD_TO_CACHE)
+    context.startService(intent)
+}
 }

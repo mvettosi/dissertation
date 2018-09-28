@@ -1,0 +1,30 @@
+User->AndroidOS: turnOnDevice
+AttackService->AttackService: startService()
+User->AndroidOS: turnScreenOn()
+AndroidOS->AttackService: broadcast(ACTION_SCREEN_ON)
+AttackService->Listener: startRecording()
+Listener->Listener: retrieveSettings()
+Listener->Listener: registerToConfiguredSensors()
+Listener->Cache: dataCollected()
+User->AndroidOS: typeDigit()
+Listener->Cache: dataCollected()
+User->AndroidOS: typeDigit()
+Listener->Cache: dataCollected()
+User->AndroidOS: typeDigit()
+Listener->Cache: dataCollected()
+User->AndroidOS: typeDigit()
+Listener->Cache: dataCollected()
+User->AndroidOS: submit()
+alt
+    AndroidOS->AttackService: broadcast(ACTION_USER_PRESENT)
+else
+    AndroidOS->AttackService: broadcast(ACTION_USER_UNLOCKED)
+end
+AttackService->Listener: stopRecording()
+Listener->Listener: unregisterFromSensors()
+Listener->+Cache: clearCache()
+Cache->+DatabaseClient: sendDocument(cachedData)
+Cache->-Cache: emptyCache()
+DatabaseClient->DatabaseClient: serialize(cachedData)
+DatabaseClient->+Database: httpRequest(serializedData)
+Database-->-DatabaseClient: requestResult

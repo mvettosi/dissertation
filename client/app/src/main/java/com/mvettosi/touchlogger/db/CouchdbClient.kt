@@ -14,6 +14,7 @@ class CouchdbClient(context: Context) {
 
     companion object {
         private const val TAG = "CouchdbClient"
+        //TODO externalize these configurations
         private const val protocol = "http"
         private const val host = "Matteos-iMac.connect"
         private const val port = "5984"
@@ -24,7 +25,7 @@ class CouchdbClient(context: Context) {
     }
 
     fun sendDocument(doc: Any) {
-        var body = mapper.writeValueAsString(doc)
+        val body = mapper.writeValueAsString(doc)
         Log.v(TAG, "Sending cache: " + prettyJson(body))
 
         // Request a string response from the provided URL.
@@ -122,7 +123,7 @@ class CouchdbClient(context: Context) {
     }
 
     private fun getViewUrl(view: String, params: MutableMap<String, String>): String {
-        var queryBuilder = StringBuilder()
+        val queryBuilder = StringBuilder()
         for ((key, value) in params) {
             if (!queryBuilder.isEmpty()) {
                 queryBuilder.append("&")
